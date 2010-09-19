@@ -1,0 +1,8 @@
+[
+  {
+    "name":"project1",
+    "long_name":"Project 1",
+    "cmd":"rake",
+    "repo":"git://example.com/project1/project1.git"
+  }
+]
