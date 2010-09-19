@@ -15,6 +15,10 @@ pretty large. Rather than pushing to the communal master branch and letting our
 build server deal with it, I'd much rather just force an update on my personal
 branch and let CIlon run the tests while I work on something else.
 
+Dependencies
+------------
+Only optimist. `npm install optimist`
+
 Configuration
 -------------
 Look at the sample json config file. Rename it to projects.json

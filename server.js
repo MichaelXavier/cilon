@@ -1,9 +1,11 @@
 var http    = require("http");
 var fs      = require("fs");
 var url     = require("url");
+var argv    = require('optimist').argv;
 var Project = require('./project')
 
 var projects = Project.reload();
+var port = argv.p || 3000;
 
 // HUP signal triggers a reload
 process.on("SIGHUP", function() {
@@ -54,6 +56,6 @@ http.createServer(function(req, res) {
     res.writeHead(500, {'Content-Type':'text/plain'});
     res.end("Internal Error: " + err, 'utf8');
   }
-}).listen(3000, "localhost");
+}).listen(port, "localhost");
 
-console.log("Server running on port 3000. That means on your feet, nuggets!");
+console.log("Server running on port " + port + ". That means on your feet, nuggets!");
