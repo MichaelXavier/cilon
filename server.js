@@ -58,4 +58,4 @@ http.createServer(function(req, res) {
   }
 }).listen(port, "localhost");
 
-console.log("Server running on port " + port + ". That means on your feet, nuggets!");
+console.log("Server running on port " + port + " with pid " + process.pid + ". That means on your feet, nuggets!");

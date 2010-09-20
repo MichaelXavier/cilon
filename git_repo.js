@@ -5,7 +5,7 @@ var fs = require('fs');
 var utils = require('./utils')
 
 function newGitRepo() {
-  var base_path = 'Projects';
+  var base_path = './Projects';
 
   function createProjects() {
     var self = this;
@@ -16,7 +16,8 @@ function newGitRepo() {
   }
 
   function gitCmd(dir, sub, args, errcb, okcb) {
-    cp.exec("git " + utils.intersperse(args.shift(sub), ' '), {cwd: dir}, function(err, sout, serr) {
+    args.unshift(sub);
+    cp.exec("git " + utils.intersperse(args, ' '), {cwd: dir}, function(err, sout, serr) {
       if (err && errcb) {
         errcb(err.code, sout, serr);
       } else if(okcb) {
@@ -38,7 +39,7 @@ function newGitRepo() {
       // Bail out if the the project already exists
       P.exists(project_path, function(exists) {
         if (exists) return;
-        gitCmd(project_path, 'clone', [origin], 
+        gitCmd(base_path, 'clone', [origin, name], 
           function(c, o, e) { gitErr('clone', c, o, e) },
           function(c, o, e) {
             console.log("Finished cloning " + origin);
@@ -53,9 +54,8 @@ function newGitRepo() {
       gitCmd(project_path, 'fetch', ['origin'], 
         function(c, o, e) { gitErr('clone', c, o, e) },
         function(c, o, e) {
-          console.log(o);//MXDEBUG
           gitCmd(project_path, 'reset', ['--hard', 'origin/master'], 
-            function(c, o, e) { gitErr('clone', c, o, e) }
+            function(c, o, e) { gitErr('fetch', c, o, e) }
           );
         }
       );
