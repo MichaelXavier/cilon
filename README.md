@@ -17,7 +17,9 @@ branch and let CIlon run the tests while I work on something else.
 
 Dependencies
 ------------
-Only optimist. `npm install optimist`
+* optimist
+* coffee-script (for tests)
+* nodeunit >= 0.1.2 (for tests)
 
 Configuration
 -------------
