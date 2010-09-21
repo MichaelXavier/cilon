@@ -1,4 +1,5 @@
 var cp = require('child_process');
+var P = require('path');
 var fs = require('fs');
 var utils = require('./utils');
 var gr = require('./git_repo');
@@ -44,6 +45,7 @@ function Project() {
         error:"",
         options:opt,
         last_built:null,
+        project_path:P.join(gr.base_path, opt.name),
 
         //--- Public methods
         build: function() {
@@ -53,7 +55,7 @@ function Project() {
             // Kill the current worker if its still running, clear out the state
             if (self.process) self.process.kill();
 
-            self.process = exec(self.options.cmd, function(err, sout, serr) {
+            self.process = cp.exec(self.options.cmd, {cwd:self.project_path}, function(err, sout, serr) {
               self.process = null;
               self.ok = !err;
               self.output = sout;

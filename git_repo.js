@@ -5,16 +5,6 @@ var fs = require('fs');
 var utils = require('./utils')
 
 function newGitRepo() {
-  var base_path = './Projects';
-
-  function createProjects() {
-    var self = this;
-
-    P.exists(base_path, function(exists) {
-      if (!exists) fs.mkdirSync(base_path, 0755);
-    });
-  }
-
   function gitCmd(dir, sub, args, errcb, okcb) {
     args.unshift(sub);
     cp.exec("git " + utils.intersperse(args, ' '), {cwd: dir}, function(err, sout, serr) {
@@ -31,15 +21,17 @@ function newGitRepo() {
   }
 
   return {
+    base_path: './Projects',
+
     clone: function(name, origin, cb) {
       var self = this;
-      createProjects();
+      utils.createUnlessExists(self.base_path, 0755)
 
       var project_path = P.join(base_path, name);
       // Bail out if the the project already exists
       P.exists(project_path, function(exists) {
         if (exists) return;
-        gitCmd(base_path, 'clone', [origin, name], 
+        gitCmd(self.base_path, 'clone', [origin, name], 
           function(c, o, e) { gitErr('clone', c, o, e) },
           function(c, o, e) {
             console.log("Finished cloning " + origin);
@@ -50,16 +42,16 @@ function newGitRepo() {
 
     pull: function(name, cb) {
       var self = this;
-      var project_path = P.join(base_path, name);
+      var project_path = P.join(self.base_path, name);
       gitCmd(project_path, 'fetch', ['origin'], 
         function(c, o, e) { gitErr('clone', c, o, e) },
-        function(c, o, e) {
+        function() {
           gitCmd(project_path, 'reset', ['--hard', 'origin/master'], 
-            function(c, o, e) { gitErr('fetch', c, o, e) }
+            function(c, o, e) { gitErr('fetch', c, o, e) },
+            function() { cb(); }
           );
         }
       );
-      cb();
     }
   };
 }

@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 function Utils() {
   return {
     validateSet: function(opts, ks) {
@@ -15,8 +17,15 @@ function Utils() {
         if (i != l.length - 1) acc += glue;
         return acc;
       }, "");
+    },
+
+    //TODO: specme when stubbing the filesystem makes sense
+    createUnlessExists: function(path, mode) {
+      P.exists(base_path, function(exists) {
+        if (!exists) fs.mkdirSync(path, mode || 0755);
+      });
     }
-  };
+  }
 }
 
 module.exports = Utils();
