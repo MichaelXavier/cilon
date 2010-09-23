@@ -27,15 +27,13 @@ function newGitRepo() {
       var self = this;
       utils.createUnlessExists(self.base_path, 0755)
 
-      var project_path = P.join(base_path, name);
+      var project_path = P.join(self.base_path, name);
       // Bail out if the the project already exists
       P.exists(project_path, function(exists) {
         if (exists) return;
         gitCmd(self.base_path, 'clone', [origin, name], 
-          function(c, o, e) { gitErr('clone', c, o, e) },
-          function(c, o, e) {
-            console.log("Finished cloning " + origin);
-          }
+          function(c, o, e) { gitErr('clone', c, o, e); },
+          function() { console.log("Finished cloning " + origin); }
         );
       });
     },
@@ -44,10 +42,10 @@ function newGitRepo() {
       var self = this;
       var project_path = P.join(self.base_path, name);
       gitCmd(project_path, 'fetch', ['origin'], 
-        function(c, o, e) { gitErr('clone', c, o, e) },
+        function(c, o, e) { gitErr('fetch', c, o, e) },
         function() {
           gitCmd(project_path, 'reset', ['--hard', 'origin/master'], 
-            function(c, o, e) { gitErr('fetch', c, o, e) },
+            function(c, o, e) { gitErr('reset', c, o, e) },
             function() { cb(); }
           );
         }

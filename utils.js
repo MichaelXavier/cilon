@@ -1,3 +1,4 @@
+var P = require('path');
 var fs = require('fs');
 
 function Utils() {
@@ -21,7 +22,7 @@ function Utils() {
 
     //TODO: specme when stubbing the filesystem makes sense
     createUnlessExists: function(path, mode) {
-      P.exists(base_path, function(exists) {
+      P.exists(path, function(exists) {
         if (!exists) fs.mkdirSync(path, mode || 0755);
       });
     }
