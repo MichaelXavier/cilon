@@ -17,7 +17,7 @@ function newGitRepo() {
   }
 
   function gitErr(sub, c, o, e) {
-    throw sub + " error(" + c + ") " + o + "\nSTDERR:\n" + e;
+    throw new Error(sub + " error(" + c + ") " + o + "\nSTDERR:\n" + e);
   }
 
   return {

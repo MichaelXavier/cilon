@@ -29,9 +29,11 @@ http.createServer(function(req, res) {
         res.writeHead(200, {'Content-Type':'application/json'});
         res.end(JSON.stringify(Project.summarize(projects)), 'utf8');
       } else if (req.method == 'POST') { // Reload
-        projects = Project.reload();
         res.writeHead(200, {'Content-Type':'text/plain'});
         res.end();
+        sys.log("Got reload request.");
+        projects = Project.reload();
+        sys.log("Reload completed.");
       }
     } else { // format of /:project/setup or /:project/build
       var parts = u.pathname.match(/^\/(\w+)\/(\w+)/);
@@ -40,9 +42,11 @@ http.createServer(function(req, res) {
       if (projects[project_name]) {
         switch(action) {
           case "build":
+            sys.log("Build requested for project " + project_name);
             projects[project_name].build();
             break;
           case "setup":
+            sys.log("Setup requested for project " + project_name);
             projects[project_name].setup();
             break;
         }
@@ -54,8 +58,10 @@ http.createServer(function(req, res) {
       }
     }
   } catch(err) {
+    //FIXME: I don't think the request is even waiting around this long
     res.writeHead(500, {'Content-Type':'text/plain'});
-    res.end("Internal Error: " + err, 'utf8');
+    res.end("Internal Error: " + err.message, 'utf8');
+    sys.log("Internal Error: " + err.message, 'utf8');
   }
 }).listen(port, "localhost");
 

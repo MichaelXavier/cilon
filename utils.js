@@ -8,7 +8,7 @@ function Utils() {
       ks.forEach(function(k) {
         k in opts || missing.push(k);
       });
-      if (missing.length > 0) throw "Missing options: " + this.intersperse(missing,', ');
+      if (missing.length > 0) throw new Error("Missing options: " + this.intersperse(missing,', '));
     },
 
     intersperse: function(list, glue) {

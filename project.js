@@ -64,6 +64,8 @@ function Project() {
               self.last_built = new Date();
               //TODO: feels like there should be listeners or something here
             });
+
+            self.ok = true; // Set true to indicate building
           });
         },
 
