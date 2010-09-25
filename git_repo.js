@@ -33,7 +33,7 @@ function newGitRepo() {
         if (exists) return;
         gitCmd(self.base_path, 'clone', [origin, name], 
           function(c, o, e) { gitErr('clone', c, o, e); },
-          function() { console.log("Finished cloning " + origin); }
+          function() { sys.log("Finished cloning " + origin); }
         );
       });
     },

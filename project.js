@@ -1,6 +1,7 @@
 var cp = require('child_process');
 var P = require('path');
 var fs = require('fs');
+var sys = require('sys');
 var utils = require('./utils');
 var gr = require('./git_repo');
 
@@ -70,9 +71,9 @@ function Project() {
           var self = this;
           if (self.ok || self.last_build || self.process) return;
 
-          console.log("Setting up project " + self.options.name + ".");
+          sys.log("Setting up project " + self.options.name + ".");
           gr.clone(self.options.name, self.options.repo, function() {
-            console.log("Done setting up project " + self.options.name + ".");
+            sys.log("Done setting up project " + self.options.name + ".");
           });
         },
 

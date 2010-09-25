@@ -1,6 +1,7 @@
 var http    = require("http");
 var fs      = require("fs");
 var url     = require("url");
+var sys = require('sys');
 var argv    = require('optimist').argv;
 var Project = require('./project')
 
@@ -9,13 +10,13 @@ var port = argv.p || 3000;
 
 // HUP signal triggers a reload
 process.on("SIGHUP", function() {
-  console.log("Caught HUP. Reloading...");
+  sys.log("Caught HUP. Reloading...");
   projects = Project.reload();
-  console.log("Done.");
+  sys.log("Reload completed.");
 });
 
 process.on("exit", function() {
-  console.log("Caught EXIT. Killing child processes...");
+  sys.log("Caught EXIT. Killing child processes...");
   Project.teardown(projects);
 });
 
