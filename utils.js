@@ -25,6 +25,10 @@ function Utils() {
       P.exists(path, function(exists) {
         if (!exists) fs.mkdirSync(path, mode || 0755);
       });
+    },
+
+    throwErr: function(code, output, err, msg) {
+      throw new Error(msg + " error(" + code + ") " + output + "\nSTDERR:\n" + error);
     }
   }
 }

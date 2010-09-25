@@ -8,12 +8,25 @@ var Project = require('./project')
 var projects = Project.reload();
 var port = argv.p || 3000;
 
+var interrupted = false;
+
 // HUP signal triggers a reload
 process.on("SIGHUP", function() {
   sys.log("Caught HUP. Reloading...");
   projects = Project.reload();
   sys.log("Reload completed.");
 });
+
+/*process.on("SIGINT", function() {
+  sys.log("Caught INT. Press Ctrl+C again to exit. Reloading...");
+  setTimeout(function() {
+    if (interrupted) {process.exit(0);
+    } else {interrupted = false;}
+  }, 2000);
+  interrupted = true;
+  projects = Project.reload();
+  sys.log("Reload completed.");
+});*/
 
 process.on("exit", function() {
   sys.log("Caught EXIT. Killing child processes...");

@@ -17,7 +17,7 @@ function newGitRepo() {
   }
 
   function gitErr(sub, c, o, e) {
-    throw new Error(sub + " error(" + c + ") " + o + "\nSTDERR:\n" + e);
+    utils.throwErr(c, o, e, "Git error on " + sub)
   }
 
   return {
@@ -30,10 +30,16 @@ function newGitRepo() {
       var project_path = P.join(self.base_path, name);
       // Bail out if the the project already exists
       P.exists(project_path, function(exists) {
-        if (exists) return;
+        if (exists) {
+          cb();
+          return;
+        }
         gitCmd(self.base_path, 'clone', [origin, name], 
           function(c, o, e) { gitErr('clone', c, o, e); },
-          function() { sys.log("Finished cloning " + origin); }
+          function() { 
+            sys.log("Finished cloning " + origin);
+            cb(); 
+          }
         );
       });
     },

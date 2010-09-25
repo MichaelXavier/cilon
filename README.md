@@ -58,13 +58,10 @@ Send a GET request to `/`. The result will be a JSON string like:
 
 TODO
 ----
-* Write unit tests for everything. As of writing this, I have no idea if most of this even works.
-* Parse command line arguments for port, etc.
+* Write unit tests for everything. Some of the utils are tested but I don't have a firm grasp on stubbing the filesystem or child process spawning.
 * Streaming summary or something so a client can just keep a connection that gets updated when a build finishes, rather than polling at some interval.
 * Configure what remote branch to pull from.
-* Better error handling.
 * Refactor: the source is pretty verbose and pretty ugly in places.
 * Use more semantic request handling and response codes.
 * Version number.
-* Better logging
 * Write a nifty CLI client with pretty colors.

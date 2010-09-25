@@ -71,11 +71,24 @@ function Project() {
 
         setup: function() {
           var self = this;
-          if (self.ok || self.last_build || self.process) return;
+
+          var post_setup = self.options.setup && function(cb) {
+            cp.exec(self.options.setup, {cwd:self.project_path}, function(err, sout, serr) {
+              if (err) utils.throwErr(null, sout, serr, "Post-setup command for " + self.options.name);
+              sys.log("Post-setup command for " + self.options.name + " complete.")
+              cb();
+              //TODO: this should probably be an event emitter
+            });
+          }
 
           sys.log("Setting up project " + self.options.name + ".");
           gr.clone(self.options.name, self.options.repo, function() {
-            sys.log("Done setting up project " + self.options.name + ".");
+            if (self.options.setup) {
+              sys.log("Running post-clone " + self.options.name + ".");
+            }
+            post_setup && post_setup(function() {
+              sys.log("Done setting up project " + self.options.name + ".");
+            });
           });
         },
 
