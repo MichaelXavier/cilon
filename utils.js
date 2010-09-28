@@ -28,7 +28,7 @@ function Utils() {
     },
 
     throwErr: function(code, output, err, msg) {
-      throw new Error(msg + " error(" + code + ") " + output + "\nSTDERR:\n" + error);
+      throw new Error(msg + " error(" + code + ") " + output + "\nSTDERR:\n" + err);
     }
   }
 }
