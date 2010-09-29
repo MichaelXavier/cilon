@@ -72,4 +72,3 @@ TODO
 * Refactor: the source is pretty verbose and pretty ugly in places.
 * Use more semantic request handling and response codes.
 * Version number.
-* Write a nifty CLI client with pretty colors.
