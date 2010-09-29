@@ -17,20 +17,13 @@ process.on("SIGHUP", function() {
   sys.log("Reload completed.");
 });
 
-/*process.on("SIGINT", function() {
-  sys.log("Caught INT. Press Ctrl+C again to exit. Reloading...");
-  setTimeout(function() {
-    if (interrupted) {process.exit(0);
-    } else {interrupted = false;}
-  }, 2000);
-  interrupted = true;
-  projects = Project.reload();
-  sys.log("Reload completed.");
-});*/
-
 process.on("exit", function() {
   sys.log("Caught EXIT. Killing child processes...");
   Project.teardown(projects);
+});
+
+process.on("uncaughtException", function(err) {
+  sys.log("Internal Error: " + err.message, 'utf8');
 });
 
 http.createServer(function(req, res) {
@@ -73,8 +66,6 @@ http.createServer(function(req, res) {
   } catch(err) {
     //FIXME: I don't think the request is even waiting around this long
     res.writeHead(500, {'Content-Type':'text/plain'});
-    res.end("Internal Error: " + err.message, 'utf8');
-    sys.log("Internal Error: " + err.message, 'utf8');
   }
 }).listen(port, "localhost");
 
