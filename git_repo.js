@@ -44,13 +44,14 @@ function newGitRepo() {
       });
     },
 
-    pull: function(name, cb) {
+    pull: function(name, branch, cb) {
       var self = this;
+      branch || (branch = 'origin/master');
       var project_path = P.join(self.base_path, name);
       gitCmd(project_path, 'fetch', ['origin'], 
         function(c, o, e) { gitErr('fetch', c, o, e) },
         function() {
-          gitCmd(project_path, 'reset', ['--hard', 'origin/master'], 
+          gitCmd(project_path, 'reset', ['--hard', branch], 
             function(c, o, e) { gitErr('reset', c, o, e) },
             function() { cb(); }
           );

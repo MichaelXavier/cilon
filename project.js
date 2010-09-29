@@ -52,7 +52,7 @@ function Project() {
         build: function() {
           var self = this;
 
-          gr.pull(self.options.name, function() {
+          gr.pull(self.options.name, 'origin/' + (self.options.branch || 'master'), function() {
             // Kill the current worker if its still running, clear out the state
             if (self.process) self.process.kill();
 

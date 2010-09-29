@@ -69,7 +69,6 @@ TODO
 ----
 * Write unit tests for everything. Some of the utils are tested but I don't have a firm grasp on stubbing the filesystem or child process spawning.
 * Streaming summary or something so a client can just keep a connection that gets updated when a build finishes, rather than polling at some interval.
-* Configure what remote branch to pull from.
 * Refactor: the source is pretty verbose and pretty ugly in places.
 * Use more semantic request handling and response codes.
 * Version number.

@@ -4,6 +4,7 @@
     "long_name":"Project 1",
     "cmd":"rake",
     "setup":"rake db:migrate",
+    "branch":"mybranch",
     "repo":"git://example.com/project1/project1.git"
   }
 ]
