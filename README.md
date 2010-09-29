@@ -25,6 +25,13 @@ Configuration
 -------------
 Look at the sample json config file. Rename it to projects.json
 
+GitHub Hooks
+------------
+Currently, cilon isn't set up to do anything cool with all the metadata that
+GitHub sends with post-receive hooks, but building should work. Tell GitHub to
+hit http://myserver.com:1234/projectname/build and you're set. The project name
+is the "name" key that you configured in projects.json
+
 Usage
 -----
 Be sure to check out a side project I made,
