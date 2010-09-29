@@ -9,6 +9,21 @@ var projects = Project.reload();
 var port = argv.p || 3000;
 
 var interrupted = false;
+function ok(response, body) {
+  response.writeHead(200, {'Content-Type':'application/json'});
+  response.end(body, 'utf8');
+}
+
+function not_found(response, body) {
+  response.writeHead(404, {'Content-Type':'text/plain'});
+  response.end(body, 'utf8');
+}
+
+function internal_error(response, body) {
+  response.writeHead(500, {'Content-Type':'text/plain'});
+  response.end(body, 'utf8');
+}
+
 
 // HUP signal triggers a reload
 process.on("SIGHUP", function() {
@@ -28,22 +43,21 @@ process.on("uncaughtException", function(err) {
 
 http.createServer(function(req, res) {
   var u = url.parse(req.url);
+  var req_parts, project_name;
 
   try {
     if (u.pathname == '/') {
+      //TODO: use an event to avoid stringifying every time?
       if (req.method == 'GET') { //Summarize
-        res.writeHead(200, {'Content-Type':'application/json'});
-        res.end(JSON.stringify(Project.summarize(projects)), 'utf8');
-      } else if (req.method == 'POST') { // Reload
-        res.writeHead(200, {'Content-Type':'text/plain'});
-        res.end();
+        ok(res, JSON.stringify(Project.summarize(projects)));
+      } else if (req.method == 'POST') {
+        ok(res);
         sys.log("Got reload request.");
         projects = Project.reload();
         sys.log("Reload completed.");
       }
-    } else { // format of /:project/setup or /:project/build
-      var parts = u.pathname.match(/^\/(\w+)\/(\w+)/);
-      var project_name = parts[1], action = parts[2];
+    } else if (req_parts = u.pathname.match(/^\/(\w+)\/(\w+)/)) {
+      project_name = req_parts[1], action = req_parts[2];
       if (!action) action = 'build';
       if (projects[project_name]) {
         switch(action) {
@@ -56,16 +70,13 @@ http.createServer(function(req, res) {
             projects[project_name].setup();
             break;
         }
-        res.writeHead(200, {'Content-Type':'text/plain'});
-        res.end();
+        ok(res);
       } else {
-        res.writeHead(404, {'Content-Type':'text/plain'});
-        res.end('Could not find project with name ' + project_name, 'utf8');
+        not_found(res, 'Could not find project with name ' + project_name, 'utf8');
       }
     }
   } catch(err) {
-    //FIXME: I don't think the request is even waiting around this long
-    res.writeHead(500, {'Content-Type':'text/plain'});
+    internal_error(res, "Internal Error: " + err.message, 'utf8');
   }
 }).listen(port, "localhost");
 
