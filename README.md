@@ -27,6 +27,10 @@ Look at the sample json config file. Rename it to projects.json
 
 Usage
 -----
+Be sure to check out a side project I made,
+   [cilon-client]{github.com/MichaelXavier/cilon-client} to monitor a cilon
+   server from the command line.
+
 ### Starting the server
     node server.js
 
@@ -36,10 +40,15 @@ Send a HUP signal or POST to `/` to reload the config.
 ### Requesting a build
 Send a request to `/project_name` or `/project_name/build`
 
-Note that only one build is allowed at a time per project. This is by design. If you request a build on a project, the current build for that project is killed first.
+Note that only one build is allowed at a time per project. This is by design.
+If you request a build on a project, the current build for that project is
+killed first.
 
 ### Setting up a project
-
+Send a request to `/project_name/setup`. This will flip the status of the
+project to building. If the project hasn't been cloned, it will be cloned. No
+matter what, if you provide a "setup" option in that project's configuration,
+that will be called for each setup request.
 
 ### Getting a summary
 Send a GET request to `/`. The result will be a JSON string like: 
