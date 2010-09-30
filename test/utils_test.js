@@ -1,7 +1,11 @@
 var testCase = require('nodeunit').testCase;
 //FIXME: figure out how to extract this to a helper and auto require
-var assert = require("./helpers/assert-extras"); 
-var utils = require('../utils')
+var assert   = require("./helpers/assert-extras"); 
+var utils    = require('../utils')
+var fs       = require('fs');
+var P        = require('path');
+
+process.chdir(__dirname);
 
 //------ validateSet tests
 module.exports.test_validateSet = testCase({
@@ -50,6 +54,49 @@ module.exports.test_intersperse = testCase({
 
     test.equals(utils.intersperse(this.arr, ','), "1,2,3", "Only puts the glue between elements.")
 
+    test.done();
+  }
+});
+
+//------ createUnlessExists tests
+module.exports.test_createUnlessExists = testCase({
+  tearDown: function() {
+    P.exists("temp", function(exists) {
+      exists && fs.rmdirSync("temp");
+    });
+  },
+
+  //FIXME: broken
+  "non-existant dir": function(test) {
+    test.expect(2);
+    //utils.createUnlessExists("temp", 0777);
+    utils.createUnlessExists("temp", 0777, function() {
+      console.log("CALLBACK!!! HOLLA");//MXDEBUG
+      P.exists("temp", function(exists) {
+        test.ok(exists, "Creates the directory.");
+      });
+      fs.stat("temp", function(err, stats) {
+        test.equals(stats.mode, 0777, "Sets the proper file permissions.");
+      });
+
+    });
+    test.done();
+  },
+
+  "existing dir": function(test) {
+    test.expect(2);
+    // Create with different permissions so its obvious who made it
+    fs.mkdir("temp", 0777, function() {
+      utils.createUnlessExists("temp, 0755", function() {
+        P.exists("temp", function(exists) {
+          test.ok(exists, "Leaves the directory there");
+        });
+
+        fs.stat("temp", function(err, stats) {
+          test.equals(stats.mode, 0777, "Does not recreate the directory");
+        });
+      });
+    });
     test.done();
   }
 });

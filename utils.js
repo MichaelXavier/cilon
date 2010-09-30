@@ -21,9 +21,20 @@ function Utils() {
     },
 
     //TODO: specme when stubbing the filesystem makes sense
-    createUnlessExists: function(path, mode) {
+    //createUnlessExists: function(path, mode) {//MXDEBUG
+    createUnlessExists: function(path, mode, cb) {
       P.exists(path, function(exists) {
-        if (!exists) fs.mkdirSync(path, mode || 0755);
+        console.log("CHECK PATH " + path + " exists: " + exists);//MXDEBUG
+        //if (!exists) fs.mkdirSync(path, mode || 0755);//MXDEBUG
+        if (exists) { 
+          console.log("exists, callback");//MXDEBUG
+          cb();
+        } else {
+          console.log("doesn't exist. mkdir");//MXDEBUG
+          //fs.mkdirSync(path, mode || 0755);//MXDEBUG
+          fs.mkdir(path, mode || 0755, cb);
+          //cb();
+        }
       });
     },
 
